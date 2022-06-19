@@ -1,4 +1,3 @@
-from xml.dom import UserDataHandler
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, PostForm
 from flask_login import current_user, login_user, logout_user, login_required
