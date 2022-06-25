@@ -3,11 +3,8 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from flask_mail import Mail
-from flask_cors import CORS
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins":"*"}})
 app.config.from_object(Config)
 app.secret_key='AjfD3F4Vr9dsvie2'
 db = SQLAlchemy(app)
@@ -35,6 +32,7 @@ def before_request():
 @app.after_request
 def after_request(res):
     res.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    res.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
     res.headers['Access-Control-Allow-Credentials'] = 'true'
-    res.headers['Access-Control-Allow-Headers'] = "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+    res.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return res

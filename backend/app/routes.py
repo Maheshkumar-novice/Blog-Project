@@ -4,7 +4,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from app.response import Response
 import json
-from flask_cors import cross_origin
 
 
 @app.route('/', methods=['GET'])
@@ -27,7 +26,6 @@ def post():
        return Response.error(400, json.dumps(form.errors)) 
 
 @app.route('/login', methods=['POST'])
-# @cross_origin()
 def login():
     if current_user.is_authenticated:
         return Response.success('success', {'message': 'Already logged in!'})
@@ -37,7 +35,6 @@ def login():
         if user is None or not user.check_password(form.password.data):
             return Response.error(400, 'Invalid username or password')
         login_user(user, remember=form.remember_me.data)
-        # Response.headers.add('Access-Control-Allow-Origin', '*')
         return Response.success('success', {'message': 'Successfully logged in!', 'user': user.data()})
     else:
         return Response.error(400, json.dumps(form.errors))
@@ -46,12 +43,10 @@ def login():
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
-    print("hello ", current_user)
     return Response.success('success', {'message': 'Successfully logged out!'})
 
 
 @app.route('/register', methods=['POST'])
-# @cross_origin()
 def register():
     if current_user.is_authenticated:
         return Response.success('success', {'message': 'Already logged in!'})
@@ -70,7 +65,6 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first()
-    posts = user.posts.order_by(Post.timestamp.desc())
     if user:
         user_data = user.data()
         return Response.success('sucess', {'message': 'User Data and Posts', 
@@ -135,7 +129,6 @@ def explore():
 
 @app.route('/current-user', methods=['GET'])
 def current_user_data():
-    print(current_user)
     if current_user.is_authenticated:
         return current_user.data()
     return {}, 404
