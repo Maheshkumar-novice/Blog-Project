@@ -4,6 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from app.response import Response
 import json
+from flask_cors import cross_origin
+
 
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
@@ -46,6 +48,7 @@ def logout():
 
 
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     if current_user.is_authenticated:
         return Response.success('success', {'message': 'Already logged in!'})
