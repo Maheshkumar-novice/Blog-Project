@@ -7,7 +7,7 @@ from flask_mail import Mail
 from flask_cors import CORS
 
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, resources={r"*": {"origins":"*"}})
 app.config.from_object(Config)
 app.secret_key='AjfD3F4Vr9dsvie2'
 db = SQLAlchemy(app)
@@ -31,3 +31,10 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
+@app.after_request
+def after_request(res):
+    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    res.headers['Access-Control-Allow-Credentials'] = 'true'
+    res.headers['Access-Control-Allow-Headers'] = "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+    return res

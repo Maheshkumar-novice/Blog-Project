@@ -27,6 +27,7 @@ def post():
        return Response.error(400, json.dumps(form.errors)) 
 
 @app.route('/login', methods=['POST'])
+# @cross_origin()
 def login():
     if current_user.is_authenticated:
         return Response.success('success', {'message': 'Already logged in!'})
@@ -36,7 +37,8 @@ def login():
         if user is None or not user.check_password(form.password.data):
             return Response.error(400, 'Invalid username or password')
         login_user(user, remember=form.remember_me.data)
-        return Response.success('success', {'message': 'Successfully logged in!'})
+        # Response.headers.add('Access-Control-Allow-Origin', '*')
+        return Response.success('success', {'message': 'Successfully logged in!', 'user': user.data()})
     else:
         return Response.error(400, json.dumps(form.errors))
 
@@ -44,11 +46,12 @@ def login():
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
+    print("hello ", current_user)
     return Response.success('success', {'message': 'Successfully logged out!'})
 
 
 @app.route('/register', methods=['POST'])
-@cross_origin()
+# @cross_origin()
 def register():
     if current_user.is_authenticated:
         return Response.success('success', {'message': 'Already logged in!'})
@@ -129,3 +132,10 @@ def explore():
     posts = Post.query.order_by(Post.timestamp.desc()).all()
     return Response.success('success', {'message': 'All posts', 'posts': json.dumps(posts, default=Post.data)})
 
+
+@app.route('/current-user', methods=['GET'])
+def current_user_data():
+    print(current_user)
+    if current_user.is_authenticated:
+        return current_user.data()
+    return {}, 404
