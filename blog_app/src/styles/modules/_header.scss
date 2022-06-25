@@ -1,0 +1,11 @@
+header{
+    display: flex;
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+
+    & .user-logo{
+        font-size: 2rem;
+    }
+}
