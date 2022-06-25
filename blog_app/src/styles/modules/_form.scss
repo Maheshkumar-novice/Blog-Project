@@ -1,0 +1,22 @@
+.form-container{
+    margin: 2rem auto;
+    width: clamp(200px, 90vw, 600px);
+    border: 2px solid black;
+    padding: 1rem;
+}
+
+.form-container h1{
+    text-align: center;
+    padding: .5rem;
+    border-bottom: 2px solid black;
+}
+
+.form-container form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-register-link{
+    margin: .5rem;
+    text-align: center;
+}
