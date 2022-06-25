@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Form, Button, Container } from 'react-bootstrap';
 import { axiosInstance } from '../axiosConfig';
 import Notification from './Notification';
+import { userContext } from '../App';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const setUser = useContext(userContext).user[1];
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [remember_me, setRemember_me] = useState(true);
   const [message, setMessage] = useState({
     value: "",
     variant: "primary",
@@ -18,7 +22,7 @@ const Login = () => {
     let data = {
       username,
       password,
-      remeber_me: true
+      remember_me,
     }
     try {
       const res = await axiosInstance({
@@ -31,12 +35,14 @@ const Login = () => {
       });
       console.log(res);
       if(res.status === 200){
+        setUser(res.data.data.user);
         setMessage({
           value: "",
           variant: ""
         })
       }
       e.target.reset()
+      navigate('/');
       // console.log(e.target.reset());
     }
     catch(error){
@@ -63,7 +69,7 @@ const Login = () => {
           <Form.Control type="password" placeholder="Password" name='password' value={password} onChange={(e) => {setPassword(e.target.value)}} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Remeber Me" name='remember_me' />
+          <Form.Check type="checkbox" checked={remember_me} label="Remeber Me" name='remember_me' onChange={(e) => {setRemember_me(e.target.checked)}} />
         </Form.Group>
         <Button variant="primary" className='align-self-center' type="submit">
           Submit
