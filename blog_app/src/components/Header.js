@@ -1,33 +1,44 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaUserAlt } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
-import { Outlet } from 'react-router-dom';
+import { IoMdAdd } from 'react-icons/io'
+import { Outlet, useNavigate } from 'react-router-dom';
 import { userContext } from '../App';
 import { axiosInstance } from '../axiosConfig';
+import BlogForm from './BlogForm';
 
 const Header = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useContext(userContext).user;
+    const [isFormOpen, setIsFormOpen] = useState(false)
     const logout_user = async () => {
         try{
-            const res = await axiosInstance.get('/logout');
+            await axiosInstance.get('/logout');
             setUser({});
         }
         catch(error){
             console.log(error.response)
         }
     }
+    const handleAddClick = () => {
+        setIsFormOpen(true)
+    }
     return (
         <>
             <header>
-                <h1>GoBlogging</h1>
+                <h1>GoMicrO</h1>
+                <IoMdAdd className='create-logo' onClick={handleAddClick} />
                 <div className='user'>
                     <h3>
                         { Object.keys(user).length === 0
-                            ? <FaUserAlt className='user-logo' />
+                            ? <FaUserAlt className='user-logo' onClick={() => {
+                                navigate('/login');
+                            }} />
                             : <FiLogOut className='user-logo' onClick={logout_user}/>}
                     </h3>
                 </div>
             </header>
+            {isFormOpen ? (<BlogForm setIsOpen={setIsFormOpen} />) : ("")}
             <Outlet/>
         </>
 

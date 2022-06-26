@@ -52,10 +52,6 @@ class User(UserMixin, db.Model):
                         followers.c.follower_id == self.id)
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc()) 
-    
-    def get_username(user_id):
-        user = User.query.filter_by(user_id=user_id).first()
-        return user.username if user else None
 
     def data(self):
         return {
@@ -66,6 +62,10 @@ class User(UserMixin, db.Model):
             'followers': self.followers.count(),
             'following': self.followed.count()
         }  
+
+    def get_username(user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return user.username if user else None
 
     def __repr__(self):
         return f'<User {self.username}>'
