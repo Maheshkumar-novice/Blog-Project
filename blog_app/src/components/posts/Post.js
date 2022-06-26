@@ -4,7 +4,7 @@ import { userContext } from '../../App';
 import { axiosInstance } from '../../axiosConfig';
 import MicroPost from './MicroPost';
 
-const Post = () => {
+const Post = ({path}) => {
     const navigate = useNavigate();
     const [post, setPost] = useState([]);
     const [user, setUser] = useContext(userContext).user;
@@ -13,25 +13,39 @@ const Post = () => {
             const res = await axiosInstance.get('/current-user');
             console.log(res.data);
             setUser(res.data);
-            getAllPost();
         }
         catch (error) {
             console.log(error.response);
-            // navigate('/login');
+            navigate('/login');
         }
     }
+
+    useEffect(() => {
+        if(path === 'mypost' && !user.username){
+            return;
+        }
+        getAllPost();
+    }, [path])
+
+    useEffect(() => {
+        console.log("user ", user);
+        if(user.username && path === 'mypost'){
+            getAllPost();
+        }
+    }, [user]);
 
     const getAllPost = async () => {
         try {
             const res = await axiosInstance({
                 method: 'get',
-                url: '/explore',
+                url: path==='explore' ? '/explore' : `/user/${user.username}`,
             });
-            console.log(JSON.parse(res.data.data.posts));
-            setPost(JSON.parse(res.data.data.posts))
+            const postString = path === 'explore' ? res.data.data.posts : res.data.data.user_data.posts;
+            console.log("post", postString);
+            setPost(JSON.parse(postString));
         }
         catch (error) {
-            console.log(error.status)
+            console.log(error)
             // if(error.response.status === 401){
             //   window.location = '/login';
             // }

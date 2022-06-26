@@ -5,9 +5,18 @@ header{
     align-items: center;
     border-bottom: 1px solid black;
 
+    & .user{
+        display: flex;
+        gap: 0 2rem;
+        align-items: center;
+    }
+
+    & h3{
+        cursor: pointer;
+    }
+
     & .user-logo{
         font-size: 2rem;
-        cursor: pointer;
     }
     & .create-logo{
         font-size: 1.6rem;

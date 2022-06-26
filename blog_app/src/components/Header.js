@@ -26,15 +26,18 @@ const Header = () => {
     return (
         <>
             <header>
-                <h1>GoMicrO</h1>
-                <IoMdAdd className='create-logo' onClick={handleAddClick} />
+                <h1 onClick={() => {navigate('/')}} style={{cursor: "pointer"}}>GoMicrO</h1>
+                <div onClick={handleAddClick} style={{cursor: "pointer"}}>
+                    Create Post <IoMdAdd className='create-logo' />
+                </div>
                 <div className='user'>
+                    <h3 onClick={() => {navigate('/mypost')}}>My Posts</h3>
                     <h3>
                         { Object.keys(user).length === 0
                             ? <FaUserAlt className='user-logo' onClick={() => {
                                 navigate('/login');
                             }} />
-                            : <FiLogOut className='user-logo' onClick={logout_user}/>}
+                            : <div onClick={logout_user}>{`Hi, ${user.username}`}<FiLogOut className='user-logo'/></div>}
                     </h3>
                 </div>
             </header>
