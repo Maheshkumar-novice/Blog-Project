@@ -52,6 +52,10 @@ class User(UserMixin, db.Model):
                         followers.c.follower_id == self.id)
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc()) 
+    
+    def get_username(user_id):
+        user = User.query.filter_by(user_id=user_id).first()
+        return user.username if user else None
 
     def data(self):
         return {
@@ -78,7 +82,8 @@ class Post(db.Model):
             'id': self.id,
             'body': self.body,
             'timestamp': str(self.timestamp),
-            'user_id': self.user_id
+            'user_id': self.user_id,
+            'user_name': User.get_username(self.user_id)
         }
 
     def __repr__(self):
